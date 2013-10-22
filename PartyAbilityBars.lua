@@ -39,10 +39,48 @@ end
 
 local InArena = function() return (select(2,IsInInstance()) == "arena") end
 
+local function wipe(t)
+	for k,v in pairs(t) do
+		t[k]=nil
+	end
+end
+
 local _iconPaths = {}
 local iconPaths = {
 	[20594] = 1, -- Stoneform
+	[25275] = 15, -- Intercept
+	[43443] = 10, -- Spell Reflection
+	[3411] = 30, -- Intervene
+	[29166] = 360, -- Innervate
+	[8983] = 60, -- Bash
+	[14311] = 30, -- Freezing Trap
+	[19503] = 30, -- Scatter Shot
+	[27068] = 180, -- Wyvern Sting
+	[2139] = 24, -- Counterspell
+	[45438] = 300, -- Ice Block
+	[27088] = 21, -- Frostnova
+	[11958] = 384, -- Cold Snap
+	[10308] = 50, -- Hammer of Justice
+	[1044] = 25, -- Hand of Freedom
+	[27148] = 30, -- Blessing of Sacrifice
+	[10278] = 180, -- Blessing of Protection
+	[1020] = 300, -- Divine Shield
+	[25454] = 6, -- Earth Shock
+	[16190] = 300, -- Manatide
+	[10890] = 27, -- Psychic Scream
 	[33206] = 120, -- Pain Suppression
+	[10060] = 180, -- Power Infusion
+	[34433] = 300, -- Shadowfiend
+	[2094] = 90, -- Blind
+	[26889] = 210, -- Vanish
+	[14185] = 600, -- Preparation
+	[31224] = 60, -- Cloak of Shadows	
+	[19647] = 24, -- Spell Lock
+	[17925] = 120, -- Death Coil
+	[7744] = 120, -- Will of the Forsaken
+	[28730] = 120, -- Arcane Torrent
+	[20549] = 120, -- War Stomp
+	[20594] = 180, -- Stoneform
 }
 for k in pairs(iconPaths) do _iconPaths[GetSpellInfo(k)] = select(3,GetSpellInfo(k)) end
 iconPaths = _iconPaths
@@ -127,7 +165,7 @@ local defaultAbilities = {
 	},
 }
 
-local function convertspellids(t)
+function convertspellids(t)
 	local temp = {}
 	for class,table in pairs(t) do
 		temp[class] = {}
@@ -302,7 +340,7 @@ function PAB:AppendIcon(icons,anchor)
 end
 
 function PAB:RequestSync()
-	--wipe(syncGUIDS)
+	wipe(syncGUIDS)
 	SendAddonMessage(CommPrefix2, pGUID, "PARTY")
 end
 
@@ -476,7 +514,7 @@ local event, sourceGUID,sourceName,sourceFlags,destGUID,destName,destFlags,spell
 	if syncGUIDS[sourceGUID] then return end
 	local pIndex
 	for i=1, 4 do
-		if sourceGUID == UnitGUID("party"..i) then
+		if sourceGUID == UnitGUID("party"..i) or sourceGUID == UnitGUID("partypet"..i) then
 			pIndex = i
 		end
 	end
